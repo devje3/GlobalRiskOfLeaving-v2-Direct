@@ -1,0 +1,189 @@
+{
+  "id": "home",
+  "endPoints": [
+    {
+      "baseUrlType": "COMMON",
+      "name": "currLoginUser",
+      "authType": "sso",
+      "url": "workers/me"
+    },
+    {
+      "name": "directReports",
+      "baseUrlType": "COMMON",
+      "authType": "sso",
+      "deferred": true,
+      "url": "<% 'workers/'+ directID + '/directReports' %>"
+    },
+    {
+      "name": "riskOfLeavingWorker",
+      "baseUrlType": "WQL",
+      "authType": "sso",
+      "deferred": true,
+      "url": "<%
+            // the query selects by descendent entryDate - the only way to order correctly.
+            // Two records are needed because we need the old one and the current one if it has it.
+              var query = 'SELECT employee, entryDate, level, riskStatus'+
+                  ' FROM  GlobalRiskofLeaving_kftwmx_tIRiskOfLeavings '+
+                  ' WHERE (employee = \"'  + id +'\") ORDER BY entryDate DESC LIMIT 2  ';
+              return 'data?query=' + query.urlEncode();
+              %>"
+    },
+    {
+      "name": "openRetentionRegister",
+      "baseUrlType": "WQL",
+      "authType": "sso",
+      "deferred": true,
+      "url": "<%
+              var query = 'SELECT employee, entryDate, level, riskStatus'+
+                  ' FROM  GlobalRiskofLeaving_kftwmx_tIRiskOfLeavings '+
+                  ' WHERE (employee = \"'  + id +'\") AND riskStatus = \"Open\" LIMIT 1 ';
+              return 'data?query=' + query.urlEncode();
+              %>"
+    }
+  ],
+  "presentation": {
+    "headerSize": "VPS_DEFAULT",
+    "title": {
+      "type": "title",
+      "label": "Global Risk of Leaving"
+    },
+    "body": {
+      "type": "section",
+      "children": [
+        {
+          "type": "grid",
+          "label": "Team Member Group",
+          "id": "teamMemberGroup",
+          "rows": "<%
+                   var user = !empty queryParams.currUserID ? queryParams.currUserID : currLoginUser.id
+                   var ReportData = directReports.invoke( {'directID': user});
+                   return ReportData.data;
+                   %>",
+          "rowVariableName": "reportRow",
+          "enabled": false,
+          "columns": [
+            {
+              "type": "column",
+              "columnId": "teamMember",
+              "label": "Team Member",
+              "_sortableAndFilterable": "true",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% reportRow.descriptor %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "previousGrol",
+              "label": "Previous GROL Status",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<%
+                          var risk = riskOfLeavingWorker.invoke( {'id': reportRow.id});
+                          if (!(empty risk) && risk.total > 1 && risk.data[0].riskStatus == 'Open') return risk.data[1].level;
+                          else return risk.data[0].level;
+                          %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "previousGrolDate",
+              "label": "Previous GROL Date Entry",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<%
+                          var risk = riskOfLeavingWorker.invoke( {'id': reportRow.id});
+                          if (!(empty risk) && risk.total > 1 && risk.data[0].riskStatus == 'Open') return risk.data[1].entryDate;
+                          else return risk.data[0].entryDate;
+
+                          %>"
+              }
+            },
+            {
+                "type": "column",
+                "columnId": "updateROL",
+                "label": "Update ROL Status",
+              "cellTemplate": {
+                "type": "button",
+                "action": "AUXILIARY",
+                "label": "Edit",
+                "visible": "<%
+                            var risk = openRetentionRegister.invoke( {'id': reportRow.id});
+                            empty(risk.data);
+                            %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "RetentionButton",
+              "label": "Retention Effort",
+              "cellTemplate": {
+                "type": "button",
+                "action": "PRIMARY",
+                "label": "Initiate",
+                "visible": "<%
+                            var risk = openRetentionRegister.invoke( {'id': reportRow.id});
+                            !empty(risk.data);
+                            %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "viewTeam",
+              "label": "View Team",
+              "cellTemplate": {
+                "type": "button",
+                "action": "AUXILIARY",
+                "label": "View",
+                "visible": "<%
+                            reportRow.isManager
+                            %>",
+                "taskReference": {
+                  "taskId": "root",
+                  "parameterBindings": {
+                    "currUserID": "<% reportRow.id %>"
+                  }
+                }
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "currentROL",
+              "label": "Current GROL Status",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<%
+                          var risk = riskOfLeavingWorker.invoke( {'id': reportRow.id});
+                          if (!(empty risk) && risk.total > 1 && risk.data[0].riskStatus == 'Open') return risk.data[0].level;
+                          else return null;
+                          %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "currentROLDate",
+              "label": "Current GROL Date Entry",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<%
+                          var risk = riskOfLeavingWorker.invoke( {'id': reportRow.id});
+                          if ( !(empty risk) && risk.total > 1 && risk.data[0].riskStatus == 'Open') return risk.data[0].entryDate;
+                          else return null;
+                          %>"
+              }
+            },
+            {
+              "type": "column",
+              "columnId": "workdayID",
+              "label": "Workday ID",
+              "cellTemplate": {
+                "type": "text",
+                "value": "<% reportRow.id %>"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

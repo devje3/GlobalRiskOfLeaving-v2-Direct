@@ -1,0 +1,21 @@
+{
+  "id": "GrolDirect_kftwmx",
+  "languages": [
+    {
+      "code": "en-US",
+      "description": "English"
+    }
+  ],
+  "siteAuth": {
+    "authTypes": [
+      {
+        "scheme": "SSO",
+        "id": "sso"
+      }
+    ]
+  },
+  "siteId": "GrolDirect_kftwmx",
+  "cdnEnabled": true,
+  "siteProperties": [ ],
+  "applicationId": "GrolDirect_kftwmx"
+}

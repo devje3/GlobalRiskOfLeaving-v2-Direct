@@ -1,0 +1,27 @@
+{
+  "appProperties": [ ],
+  "tasks": [
+    {
+      "id": "root",
+      "routingPattern": "/",
+      "page": {
+        "id": "home"
+      }
+    }
+  ],
+  "applicationId": "GrolDirect_kftwmx",
+  "dataProviders": [
+    {
+      "key": "COMMON",
+      "value": "https://api.workday.com/common/v1/"
+    },
+    {
+      "key": "WQL",
+      "value": "https://api.workday.com/wql/v1/"
+    },
+    {
+      "key": "WQL-RaaS",
+      "value": "https://api.workday.com/raas/jbanks/RPT_XTEND_-_Global_Roster_All_Employees_by_TL"
+    }
+  ]
+}

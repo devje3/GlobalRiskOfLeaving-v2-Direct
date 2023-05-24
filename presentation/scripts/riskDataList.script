@@ -1,0 +1,117 @@
+var careerGrowthData = [
+{'id': 'In Field of Study', 'descriptor': 'In Field of Study'},
+{'id': 'Other Job Offer', 'descriptor': 'Other Job Offer'},
+{'id': 'Transfer to a higher job level', 'descriptor': 'Transfer to a higher job level'}
+];
+
+var dissatisfiedWJobData = [
+{'id': 'Dissatisfied with Job', 'descriptor': 'Dissatisfied with Job'},
+{'id': 'Other job offer', 'descriptor': 'Other Job Offer'},
+{'id': 'Dissatisfied with Management', 'descriptor': 'Dissatisfied with Management'},
+{'id': 'Family Reasons', 'descriptor': 'Family Reasons'},
+{'id': 'Health Reasons', 'descriptor': 'Health Reasons'},
+{'id': 'Issues with Pay/Benefits', 'descriptor': 'Issues with Pay/Benefits'},
+{'id': 'Issues with Work Schedule', 'descriptor': 'Issues with Work Schedule'},
+{'id': 'Job Security', 'descriptor': 'Job Security'},
+{'id': 'No Call No Show / AWOL', 'descriptor': 'No Call No Show / AWOL'},
+{'id': 'Other Job Offer', 'descriptor': 'Other Job Offer'},
+{'id': 'Personal / Undisclosed', 'descriptor': 'Personal / Undisclosed'},
+{'id': 'Proximity', 'descriptor': 'Proximity'},
+{'id': 'Relocation', 'descriptor': 'Relocation'},
+{'id': 'Retirement', 'descriptor': 'Retirement'},
+{'id': 'To Migrate / Work Overseas', 'descriptor': 'To Migrate / Work Overseas'},
+{'id': 'To Continue Studies', 'descriptor': 'To Continue Studies'},
+{'id': 'To Go into Business', 'descriptor': 'To Go into Business'},
+{'id': 'Personal Safety', 'descriptor': 'Personal Safety'},
+{'id': 'Job stability', 'descriptor': 'Job stability'}
+];
+
+var disciplinaryActionCase = [
+{'id': 'Attendance', 'descriptor': 'Attendance'},
+{'id': 'Behavioral', 'descriptor': 'Behavioral'},
+{'id': 'Failed Drug Test', 'descriptor': 'Failed Drug Test'},
+{'id': 'Poor Performance', 'descriptor': 'Poor Performance'},
+{'id': 'Non-regularization', 'descriptor': 'Non-regularization'}
+];
+
+var optiontoResign = [
+{'id': 'Attendance Issues', 'descriptor': 'Attendance Issues'},
+{'id': 'Poor Performance', 'descriptor': 'Poor Performance'},
+{'id': 'Disciplinary Case', 'descriptor': 'Disciplinary Case'}
+];
+
+var security = [
+{'id': 'External Fraud', 'descriptor': 'External Fraud'},
+{'id': 'Internal Fraud', 'descriptor': 'Internal Fraud'},
+{'id': 'Thieving', 'descriptor': 'Thieving'},
+{'id': 'Work Ethics', 'descriptor': 'Work Ethics'},
+{'id': 'Extortion', 'descriptor': 'Extortion'},
+{'id': 'Not Authorized to Work', 'descriptor': 'Not Authorized to Work'}
+];
+
+var engagementReason = [
+{  'id': 'Career, Development and Learning', 'descriptor': 'Career, Development and Learning'},
+{  'id': 'Customer/Client', 'descriptor': 'Customer/Client'},
+{  'id': 'Diversity and Inclusiveness', 'descriptor': 'Diversity and Inclusiveness'},
+{  'id': 'Employment Brand', 'descriptor': 'Employment Brand'},
+{  'id': 'Enabling Work', 'descriptor': 'Enabling Work'},
+{  'id': 'Innovation and Experimentation', 'descriptor': 'Innovation and Experimentation'},
+{  'id': 'Leadership', 'descriptor': 'Leadership'},
+{  'id': 'Leadership Response and Communication', 'descriptor': 'Leadership Response and Communication'},
+{  'id': 'Performance, Pay and Recognition', 'descriptor': 'Performance, Pay and Recognition'},
+{  'id': 'Work Effectiveness', 'descriptor': 'Work Effectiveness'},
+{  'id': 'Work Tasks and Influence', 'descriptor': 'Work Tasks and Influence'},
+{  'id': 'Work Health and Safety', 'descriptor': 'Work Health and Safety'},
+{  'id': 'Other',  'descriptor': 'Other'}
+];
+
+var getRiskLevel = function(level) {
+  if(level == ['Medium'] || level == ['High']) {
+      reasonLeaving.setVisible( true );
+      subReasonLeaving.setVisible( true );
+      tentativeDateLeaving.setVisible( true );
+
+  } else {
+      reasonLeaving.setVisible( false );
+      subReasonLeaving.setVisible( false );
+      tentativeDateLeaving.setVisible( false );
+  }
+};
+
+var setReason = function( reason ) {
+  if ( reason == ['Career Growth'] ) {
+    subReasonLeaving.setValues(careerGrowthData );
+  } else if( reason == ['Dissatisfied With Job'] ) {
+    subReasonLeaving.setValues(dissatisfiedWJobData );
+  } else if (reason == ['Disciplinary Action Case'] ) {
+    subReasonLeaving.setValues(disciplinaryActionCase );
+  } else if( reason == ['Option to Resign'] ) {
+    subReasonLeaving.setValues( optiontoResign );
+  } else if( reason == ['Security'] ) {
+    subReasonLeaving.setValues( security );
+  }else{
+    subReasonLeaving.setValues( [] );
+  }
+};
+
+var setWorkerValue = function ( wkList, QPworker ) {
+  var wkrList = wkList.data;
+  var wkrId = QPworker;
+
+  return wkrList.filter(( worker ) => {
+    worker.id == wkrId;
+  });
+};
+
+
+{
+  "careerGrowthData": careerGrowthData,
+  "dissatisfiedWJobData": dissatisfiedWJobData,
+  "disciplinaryActionCase": disciplinaryActionCase,
+  "optiontoResign": optiontoResign,
+  "security": security,
+  "getRiskLevel": getRiskLevel,
+  "setReason": setReason,
+  "engagementReason": engagementReason,
+  "setWorkerValue": setWorkerValue
+}
